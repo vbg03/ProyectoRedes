@@ -76,5 +76,58 @@ router.post('/login', async (req, res) => {
 });
 
 
+// Obtener todos los usuarios (solo administradores)
+router.get('/admin/users', verificarRolAdmin, async (req, res) => {
+  try {
+    const usuarios = await usuarioModel.traerUsuarios();
+    res.json(usuarios);
+  } catch (error) {
+    console.error('Error al obtener usuarios:', error);
+    res.status(500).json({ message: 'Error al obtener usuarios' });
+  }
+});
+
+// Eliminar un usuario (solo administradores)
+router.delete('/admin/users/:id', verificarRolAdmin, async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await usuarioModel.eliminarUsuario(id);
+    res.json({ message: 'Usuario eliminado exitosamente' });
+  } catch (error) {
+    console.error('Error al eliminar usuario:', error);
+    res.status(500).json({ message: 'Error al eliminar usuario' });
+  }
+});
+
+// Actualizar usuario (creo recordar que los usuarios pueden modficar su propia información, o solo es de admin)
+router.put('/users/:id', async (req, res) => {
+  const { id } = req.params;
+  const { nombre, email, usuario, password } = req.body;
+
+  try {
+    await usuarioModel.actualizarUsuario(id, nombre, email, usuario, password);
+    res.json({ message: 'Usuario actualizado correctamente' });
+  } catch (error) {
+    console.error('Error al actualizar usuario:', error);
+    res.status(500).json({ message: 'Error al actualizar usuario' });
+  }
+});
+
+
+// Actualizar estado (pero hay que mirar si esto le pertenece a admin)
+router.patch('/users/:id/estado', async (req, res) => {
+  const { id } = req.params;
+  const { estado } = req.body;
+
+  try {
+    await usuarioModel.actualizarEstado(id, estado);
+    res.json({ message: 'Estado actualizado correctamente' });
+  } catch (error) {
+    console.error('Error al actualizar estado:', error);
+    res.status(500).json({ message: 'Error al actualizar estado del usuario' });
+  }
+});
+
 module.exports = router;
 //Aea
