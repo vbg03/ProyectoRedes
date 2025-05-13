@@ -11,11 +11,12 @@ router.get('/seguimiento', async (req, res) =>{
 router.post('/seguimiento', async (req, res) =>{
     const id_solicitud = req.body.id_solicitud;
     const id_adoptante = req.body.id_adoptante;
+    const id_animal = req.body.id_animal;
     const fecha_seguimiento = req.body.fecha_seguimiento;
     const comentarios = req.body.comentarios;
     const estado = req.body.estado;
 
-    var result = await seguimientoModel.crearSeguimiento(id_solicitud, id_adoptante, fecha_seguimiento, comentarios, estado);
+    var result = await seguimientoModel.crearSeguimiento(id_solicitud, id_adoptante,id_animal, fecha_seguimiento, comentarios, estado);
     res.send("seguimiento creado");
 });
 
