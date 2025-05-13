@@ -5,7 +5,7 @@ const app = express();
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(SeguimientoController);
-6
+
 app.listen(3004, () => {
- console.log('Seguimiento ejecutandose en el puerto 3001');
+ console.log('Seguimiento ejecutandose en el puerto 3004');
 });
