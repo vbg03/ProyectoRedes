@@ -20,23 +20,25 @@ async function traerUsuario(id) {
   return result[0];
 }
 
-async function traerUsuarioEmail(email) {
-    const result = await connection.query ('SELECT * FROM usuarios WHERE email = ?', [email]);
-    return result[0];
-    
+async function traerUsuarioEmail(identificador) {
+  const [rows] = await connection.query(
+    'SELECT * FROM usuarios WHERE usuario = ? OR email = ?',
+    [identificador, identificador]
+  );
+  return rows[0];
 }
 
 async function actualizarUsuario(id, nombre, email, usuario, password) {
   const result = await connection.query(
-    'UPDATE usuarios SET usuarios = ? WHERE id = ?',
-    [password, usuario, email, nombre, id]
+    'UPDATE usuarios SET nombre = ?, email = ?, usuario = ?, password = ? WHERE id = ?',
+    [nombre, email, usuario, password, id]
   );
   return result;
 }
 
 async function actualizarEstado(id, estado) {
   const resultEstado = await connection.query(
-    'UPDATE usuarios SET usuarios = ? WHERE id = ?',
+    'UPDATE usuarios SET estado = ? WHERE id = ?',
     [estado, id]
   );
   return resultEstado;
@@ -68,4 +70,3 @@ module.exports = {
   borrarUsuario,
 };
 
-//Falta las siguientes funciones para mascotas : actualizar y borrar(pendiente por falta del microservicio)

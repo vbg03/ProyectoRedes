@@ -2,20 +2,23 @@ const { Router } = require("express");
 const router = Router();
 const usuarioModel = require("../models/usuarioModel");
 
-// function VerificarRolAdmin (req, res) {
-//     const {rol} = req.user;
-//     if(rol !=='administrador'){
-//         return res.status(403).json({message: 'Acceso denegado: Solo los administradores pueden hacer esto :)'});
-//     }
+ function verificarRolAdmin (req, res) {
+     const {rol} = req.user;
+     if(rol !=='administrador'){
+         return res.status(403).json({message: 'Acceso denegado: Solo los administradores pueden hacer esto :)'});
+     }
 
-// }
-
+ }
 router.post("/register", async (req, res) => {
   const { nombre, cc, email, usuario, password, estado, rol } = req.body;
 
   try {
+    // Log para verificar los datos que recibimos
+    console.log('Datos recibidos para registro:', req.body);
+
     // Validar el rol recibido
     const rolesPermitidos = ["adoptante", "rescatista"];
+    console.log('Rol recibido:', rol);  // Log para verificar el valor del rol
     if (!rolesPermitidos.includes(rol)) {
       return res
         .status(400)
@@ -25,14 +28,14 @@ router.post("/register", async (req, res) => {
     }
 
     // Verificar si ya existe un usuario con ese nombre o email
-    const usuarioExistente = await usuarioModel.traerUsuario(nombre, email);
-    if (usuarioExistente) {
-      return res
-        .status(400)
-        .json({ message: "El correo o nombre ya están en uso" });
+    console.log('Verificando si el usuario o email ya existen...');
+    const usuarioExistente = await usuarioModel.traerUsuarioEmail(usuario, email);
+    if (usuarioExistente !== undefined && usuarioExistente !== null) {
+      return res.status(400).json({ message: "El correo o nombre ya están en uso" });
     }
 
     // Crear el nuevo usuario
+    console.log('Creando el nuevo usuario...');
     await usuarioModel.crearUsuario(
       nombre,
       cc,
@@ -45,35 +48,48 @@ router.post("/register", async (req, res) => {
 
     return res.status(201).json({ message: "Usuario creado exitosamente" });
   } catch (error) {
-    console.error(error);
+    console.error('Error al registrar usuario:', error);  // Log detallado del error
     return res.status(500).json({ message: "Error al registrar el usuario" });
   }
 });
+
 
 // Iniciar sesión 
 
 
 router.post('/login', async (req, res) => {
-  const { email, password } = req.body;
+  const { usuario, email, password } = req.body;
+
+  // Usamos cualquiera de los dos (usuario o email)
+  const identificador = usuario || email;
 
   try {
-    // Buscar el usuario por email
-    const usuario = await usuarioModel.traerUsuarioEmail(email);
-    if (!usuario) {
+    const usuarioBuscado = await usuarioModel.traerUsuarioEmail(identificador);
+
+    if (!usuarioBuscado) {
       return res.status(404).json({ message: 'Usuario no encontrado' });
     }
 
-    if (password !== usuario.password) {
+    if (usuarioBuscado.estado !== 'activo') {
+      return res.status(403).json({
+        message: 'Tu cuenta aún no ha sido activada por un administrador'
+      });
+    }
+
+    if (password !== usuarioBuscado.password) {
       return res.status(401).json({ message: 'Contraseña incorrecta' });
     }
 
+    res.json({ message: 'Inicio de sesión exitoso', usuario: usuarioBuscado });
 
-   
   } catch (error) {
-    console.error(error);
+    console.error('Error al iniciar sesión:', error);
     return res.status(500).json({ message: 'Error al iniciar sesión' });
   }
 });
+
+
+
 
 
 // Obtener todos los usuarios (solo administradores)
@@ -100,8 +116,8 @@ router.delete('/admin/users/:id', verificarRolAdmin, async (req, res) => {
   }
 });
 
-// Actualizar usuario (creo recordar que los usuarios pueden modficar su propia información, o solo es de admin)
-router.put('/users/:id', async (req, res) => {
+// Actualizar usuario 
+router.put('/admin/users/:id', async (req, res) => {
   const { id } = req.params;
   const { nombre, email, usuario, password } = req.body;
 
@@ -115,8 +131,8 @@ router.put('/users/:id', async (req, res) => {
 });
 
 
-// Actualizar estado (pero hay que mirar si esto le pertenece a admin)
-router.patch('/users/:id/estado', async (req, res) => {
+// Actualizar estado 
+router.patch('/admin/users/:id/estado', async (req, res) => {
   const { id } = req.params;
   const { estado } = req.body;
 
