@@ -8,6 +8,22 @@ router.get('/seguimiento', async (req, res) =>{
     res.json(result);
 })
 
+router.get('/seguimiento/:id_seguimiento', async (req, res) => {
+  const id_seguimiento = req.params.id_seguimiento;
+  var result = await seguimientoModel.traerSeguimiento(id_seguimiento);
+
+  // Verificar si no se encontró el seguimiento
+  if (!result || result.length === 0) {
+    return res.status(404).json({ message: 'Seguimiento no encontrado' });
+  }
+
+  res.json(result[0]); // Devuelve el primer resultado
+});
+
+
+
+
+
 router.post('/seguimiento', async (req, res) =>{
     const id_solicitud = req.body.id_solicitud;
     const id_adoptante = req.body.id_adoptante;

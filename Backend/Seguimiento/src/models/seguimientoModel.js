@@ -12,6 +12,16 @@ async function traerSeguimientos() {
  return result[0];
 }
 
+async function traerSeguimiento(id_seguimiento) {
+  const result = await connection.query('SELECT * FROM seguimiento WHERE id_seguimiento = ?', [id_seguimiento]);
+  return result[0];  // Asegúrate de que devuelves el primer registro
+}
+
+
+
+
+
+
 async function crearSeguimiento(id_solicitud, id_adoptante, id_animal, fecha_seguimiento, comentarios, estado) {
     const result = await connection.query('INSERT INTO seguimiento VALUES (null,?,?,?,?,?,?)', [id_solicitud, id_adoptante, id_animal, fecha_seguimiento, comentarios, estado]);
     return result;
@@ -21,5 +31,5 @@ async function crearSeguimiento(id_solicitud, id_adoptante, id_animal, fecha_seg
 
 
 module.exports = {
-    crearSeguimiento, traerSeguimientos
+    crearSeguimiento, traerSeguimientos, traerSeguimiento
 };
