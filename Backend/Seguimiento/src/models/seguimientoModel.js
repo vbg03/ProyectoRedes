@@ -19,6 +19,13 @@ async function traerSeguimiento(id_seguimiento) {
 
 
 
+async function actualizarSeguimiento(id_seguimiento, fecha_seguimiento, comentarios, estado) {
+  const result = await connection.query(
+    'UPDATE seguimiento SET fecha_seguimiento = ?, comentarios = ?, estado = ? WHERE id_seguimiento = ?',
+    [fecha_seguimiento, comentarios, estado, id_seguimiento]
+  );
+  return result;
+}
 
 
 
@@ -29,7 +36,12 @@ async function crearSeguimiento(id_solicitud, id_adoptante, id_animal, fecha_seg
     
 }
 
+async function borrarSeguimiento(id_seguimiento) {
+    const result = await connection.query('DELETE FROM seguimiento WHERE id_seguimiento = ?', id_seguimiento);
+    return result;
+}
+
 
 module.exports = {
-    crearSeguimiento, traerSeguimientos, traerSeguimiento
+    crearSeguimiento, traerSeguimientos, traerSeguimiento, actualizarSeguimiento, borrarSeguimiento
 };

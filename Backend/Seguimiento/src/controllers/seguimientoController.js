@@ -21,6 +21,39 @@ router.get('/seguimiento/:id_seguimiento', async (req, res) => {
 });
 
 
+router.put('/seguimiento/:id_seguimiento', async (req, res) => {
+  const id_seguimiento = req.params.id_seguimiento;
+  const fecha_seguimiento = req.body.fecha_seguimiento;
+  const comentarios = req.body.comentarios;
+  const estado = req.body.estado;
+
+  // Verificar si la fecha es válida
+  if (!fecha_seguimiento) {
+    return res.status(400).send("La fecha de seguimiento no puede ser nula");
+  }
+
+  // Verificar si los comentarios son válidos
+  if (!comentarios || comentarios.trim() === '') {
+    return res.status(400).send("Debe existir un comentario");
+  }
+
+  // Verificar si el estado no está vacío
+  if (!estado || estado.trim() === '') {
+    return res.status(400).send("El estado no puede estar vacío");
+  }
+
+  // Realizar la actualización del seguimiento
+  try {
+    const result = await seguimientoModel.actualizarSeguimiento(id_seguimiento, fecha_seguimiento, comentarios, estado);
+    if (result.affectedRows === 0) {
+      return res.status(404).send("El seguimiento no fue encontrado o no se actualizó");
+    }
+    res.status(200).send("Seguimiento actualizado correctamente");
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Error al actualizar el seguimiento");
+  }
+});
 
 
 
@@ -34,6 +67,14 @@ router.post('/seguimiento', async (req, res) =>{
 
     var result = await seguimientoModel.crearSeguimiento(id_solicitud, id_adoptante,id_animal, fecha_seguimiento, comentarios, estado);
     res.send("seguimiento creado");
+});
+
+
+router.delete('/seguimiento/:id_seguimiento', async (req, res) =>{
+  const id_seguimiento = req.params.id_seguimiento;
+  var result;
+  result = await seguimientoModel.borrarSeguimiento(id_seguimiento);
+  res.send("seguimiento borrado");
 });
 
 module.exports = router;
