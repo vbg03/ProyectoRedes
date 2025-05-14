@@ -29,7 +29,7 @@ router.post("/register", async (req, res) => {
 
     // Verificar si ya existe un usuario con ese nombre o email
     console.log('Verificando si el usuario o email ya existen...');
-    const usuarioExistente = await usuarioModel.traerUsuarioEmail(usuario, email);
+    const usuarioExistente = await usuarioModel.traerUsuarioEmail(usuario || email);
     if (usuarioExistente !== undefined && usuarioExistente !== null) {
       return res.status(400).json({ message: "El correo o nombre ya están en uso" });
     }
@@ -49,6 +49,7 @@ router.post("/register", async (req, res) => {
     return res.status(201).json({ message: "Usuario creado exitosamente" });
   } catch (error) {
     console.error('Error al registrar usuario:', error);  // Log detallado del error
+    console.log("Stack del error:", error.stack);
     return res.status(500).json({ message: "Error al registrar el usuario" });
   }
 });

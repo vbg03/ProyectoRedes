@@ -25,6 +25,7 @@ async function traerUsuarioEmail(identificador) {
     'SELECT * FROM usuarios WHERE usuario = ? OR email = ?',
     [identificador, identificador]
   );
+  console.log("Resultado SQL:", rows);
   return rows[0];
 }
 
