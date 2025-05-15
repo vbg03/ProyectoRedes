@@ -104,7 +104,7 @@ router.use((req, res, next) => {
 
 
 // Obtener todos los usuarios (solo administradores)
-router.get('/admin/users', verificarRolAdmin, async (res) => {
+router.get('/admin/users', verificarRolAdmin, async (req, res) => {
   try {
     const usuarios = await usuarioModel.traerUsuarios();
     res.json(usuarios);
@@ -115,13 +115,15 @@ router.get('/admin/users', verificarRolAdmin, async (res) => {
 });
 
 // Obtener un usuario (solo administradores)
-router.get('/admin/users/:id', verificarRolAdmin, async (res) => {
+router.get('/admin/users/:id', verificarRolAdmin, async (req, res) => {
+  const { id } = req.params;
+
   try {
-    const usuarios = await usuarioModel.traerUsuario(id);
-    res.json(usuarios);
+    const usuario = await usuarioModel.traerUsuario(id);
+    res.json(usuario);
   } catch (error) {
     console.error('Error al obtener usuarios:', error);
-    res.status(500).json({ message: 'Error al obtener usuarios' });
+    res.status(500).json({ message: 'Error al obtener usuario' });
   }
 });
 
