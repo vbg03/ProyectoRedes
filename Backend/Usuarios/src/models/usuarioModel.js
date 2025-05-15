@@ -30,7 +30,7 @@ async function traerUsuarioEmail(identificador) {
 }
 
 async function actualizarUsuario(id, nombre, email, usuario, password) {
-  const result = await connection.query(
+  const [result] = await connection.query(
     'UPDATE usuarios SET nombre = ?, email = ?, usuario = ?, password = ? WHERE id = ?',
     [nombre, email, usuario, password, id]
   );

@@ -104,9 +104,20 @@ router.use((req, res, next) => {
 
 
 // Obtener todos los usuarios (solo administradores)
-router.get('/admin/users', verificarRolAdmin, async (req, res) => {
+router.get('/admin/users', verificarRolAdmin, async (res) => {
   try {
     const usuarios = await usuarioModel.traerUsuarios();
+    res.json(usuarios);
+  } catch (error) {
+    console.error('Error al obtener usuarios:', error);
+    res.status(500).json({ message: 'Error al obtener usuarios' });
+  }
+});
+
+// Obtener un usuario (solo administradores)
+router.get('/admin/users/:id', verificarRolAdmin, async (res) => {
+  try {
+    const usuarios = await usuarioModel.traerUsuario(id);
     res.json(usuarios);
   } catch (error) {
     console.error('Error al obtener usuarios:', error);
@@ -119,7 +130,7 @@ router.delete('/admin/users/:id', verificarRolAdmin, async (req, res) => {
   const { id } = req.params;
 
   try {
-    await usuarioModel.eliminarUsuario(id);
+    await usuarioModel.borrarUsuario(id);
     res.json({ message: 'Usuario eliminado exitosamente' });
   } catch (error) {
     console.error('Error al eliminar usuario:', error);
@@ -157,4 +168,4 @@ router.patch('/admin/users/:id/estado', async (req, res) => {
 });
 
 module.exports = router;
-//Aea
+//Crear, ActualizarU, EliminarU, ConsultarTU, ConsultarU, ValidarCredencialesAUT = Front, Login, ActualizarE
