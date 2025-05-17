@@ -41,7 +41,25 @@ router.get('/seguimiento/adoptante/:id_adoptante', async (req, res) => {
   }
 });
 
+router.get('/seguimiento/animal/:id_animal', async (req, res) => {
+  const id_animal = req.params.id_animal;  // Obtener el id_adoptante desde los parámetros de la URL
 
+  try {
+    // Consultar los seguimientos del adoptante
+    const result = await seguimientoModel.traerSeguimientosPorAnimal(id_animal);
+
+    // Verificar si no se encontraron seguimientos
+    if (!result || result.length === 0) {
+      return res.status(404).json({ message: 'No se encontraron seguimientos para este animal' });
+    }
+
+    // Responder con los seguimientos encontrados
+    res.json(result);  // Devolver todos los seguimientos encontrados para el adoptante
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error al consultar los seguimientos del animal' });
+  }
+});
 
 router.put('/seguimiento/:id_seguimiento', async (req, res) => {
   const id_seguimiento = req.params.id_seguimiento;

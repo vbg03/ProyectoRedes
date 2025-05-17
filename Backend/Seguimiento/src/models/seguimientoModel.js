@@ -22,6 +22,11 @@ async function traerSeguimientosPorAdoptante(id_adoptante) {
   return result[0];  // Devuelve todos los seguimientos encontrados para ese adoptante
 }
 
+async function traerSeguimientosPorAnimal(id_animal) {
+  const result = await connection.query('SELECT * FROM seguimiento WHERE id_animal = ?', [id_animal]);
+  return result[0];  // Devuelve todos los seguimientos encontrados para ese adoptante
+}
+
 
 
 
@@ -49,5 +54,5 @@ async function borrarSeguimiento(id_seguimiento) {
 
 
 module.exports = {
-    crearSeguimiento, traerSeguimientos, traerSeguimiento, actualizarSeguimiento, borrarSeguimiento, traerSeguimientosPorAdoptante
+    crearSeguimiento, traerSeguimientos, traerSeguimiento, actualizarSeguimiento, borrarSeguimiento, traerSeguimientosPorAdoptante, traerSeguimientosPorAnimal
 };
