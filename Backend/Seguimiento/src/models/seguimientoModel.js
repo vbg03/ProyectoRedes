@@ -40,12 +40,15 @@ async function actualizarSeguimiento(id_seguimiento, fecha_seguimiento, comentar
 
 
 
-async function crearSeguimiento(id_solicitud, id_adoptante, id_animal, fecha_seguimiento, comentarios, estado) {
-    const result = await connection.query('INSERT INTO seguimiento VALUES (null,?,?,?,?,?,?)', [id_solicitud, id_adoptante, id_animal, fecha_seguimiento, comentarios, estado]);
+async function crearSeguimiento(id_solicitud, id_adoptante, id_animal, comentarios, estado) {
+    const fecha_seguimiento = new Date();  // Fecha actual automática
+    const result = await connection.query(
+        'INSERT INTO seguimiento VALUES (null,?,?,?,?,?,?)',
+        [id_solicitud, id_adoptante, id_animal, fecha_seguimiento, comentarios, estado]
+    );
     return result;
-    
-    
 }
+
 
 async function borrarSeguimiento(id_seguimiento) {
     const result = await connection.query('DELETE FROM seguimiento WHERE id_seguimiento = ?', id_seguimiento);
