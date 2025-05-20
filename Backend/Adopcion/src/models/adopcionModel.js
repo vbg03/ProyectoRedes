@@ -5,7 +5,7 @@ const conexion = mysql.createPool({
     host: 'localhost',
     user: 'root',
     password: '',
-    database: 'adopcionMS' // tu base de datos ✅
+    database: 'adopcionMS'
 });
 
 async function crearSolicitud(id_usuario, id_animal, fecha) {
@@ -43,7 +43,6 @@ async function eliminarSolicitud(id_solicitud) {
     );
     return result;
 }
-
 
 module.exports = {
     crearSolicitud,

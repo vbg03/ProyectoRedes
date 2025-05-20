@@ -48,7 +48,7 @@ router.put('/solicitudes/:id', async (req, res) => {
 });
 
 router.delete('/solicitudes/:id', async (req, res) => {
-  console.log("DELETE /solicitudes/:id activada"); // 👈 agrega esto
+  console.log("DELETE /solicitudes/:id activada");
   try {
     const id = req.params.id;
     const result = await modelo.eliminarSolicitud(id);
@@ -63,8 +63,6 @@ router.delete('/solicitudes/:id', async (req, res) => {
     res.status(500).send("Error interno del servidor");
   }
 });
-
-
 
 
 module.exports = router;

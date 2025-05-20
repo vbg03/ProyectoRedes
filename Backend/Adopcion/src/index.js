@@ -8,6 +8,6 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(adopcionController);
 
-app.listen(3002, () => {
-  console.log('Microservicio de Adopción ejecutándose en el puerto 3002');
+app.listen(3001, () => {
+  console.log('Microservicio de Adopción ejecutándose en el puerto 3001');
 });
