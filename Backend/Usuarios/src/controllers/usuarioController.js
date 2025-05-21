@@ -17,7 +17,8 @@ function verificarRolAdmin(req, res, next) {
 }
 
 router.post("/register", async (req, res) => {
-  const { nombre, cc, email, usuario, password, estado, rol } = req.body;
+  const { nombre, cc, email, usuario, password, rol } = req.body;
+  const estado = 'inactivo';
 
   try {
     // Log para verificar los datos que recibimos
