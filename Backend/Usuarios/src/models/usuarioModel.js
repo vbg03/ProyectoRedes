@@ -45,10 +45,10 @@ async function actualizarEstado(id, estado) {
   return resultEstado;
 }
 
-async function crearUsuario(nombre, cc, email, usuario, password, estado, rol) {
+async function crearUsuario(nombre, id_usuario, email, usuario, password, estado, rol) {
   const result = await connection.query(
     'INSERT INTO usuarios VALUES(NULL,?,?,?,?,?,?,?)',
-    [nombre, cc, email, usuario, password, estado, rol]
+    [nombre, id_usuario, email, usuario, password, estado, rol]
   );
   return result;
 }

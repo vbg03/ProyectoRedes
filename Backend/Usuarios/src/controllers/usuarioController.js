@@ -1,23 +1,25 @@
 const { Router } = require("express");
 const router = Router();
 const usuarioModel = require("../models/usuarioModel");
+const axios = require('axios');
+
 
 function verificarRolAdmin(req, res, next) {
   if (!req.user) {
-    return res.status(403).json({ message: 'Acceso denegado: Usuario no autenticado' });
+    return res.status(403).json({ message: 'Aid_usuarioeso denegado: Usuario no autenticado' });
   }
 
   const { rol } = req.user;
 
   if (rol !== 'administrador') {
-    return res.status(403).json({ message: 'Acceso denegado: Solo los administradores pueden hacer esto :)' });
+    return res.status(403).json({ message: 'Aid_usuarioeso denegado: Solo los administradores pueden hacer esto :)' });
   }
 
   next();
 }
 
 router.post("/register", async (req, res) => {
-  const { nombre, cc, email, usuario, password, rol } = req.body;
+  const { nombre, id_usuario, email, usuario, password, rol } = req.body;
   const estado = 'inactivo';
 
   try {
@@ -46,7 +48,7 @@ router.post("/register", async (req, res) => {
     console.log('Creando el nuevo usuario...');
     await usuarioModel.crearUsuario(
       nombre,
-      cc,
+      id_usuario,
       email,
       usuario,
       password,
@@ -163,12 +165,43 @@ router.patch('/admin/users/:id/estado', async (req, res) => {
 
   try {
     await usuarioModel.actualizarEstado(id, estado);
-    res.json({ message: 'Estado actualizado correctamente' });
+
+    // Notificar al usuario sobre el cambio de estado
+    await axios.post('http://localhost:3006/notificaciones', {
+      id_usuario: id,
+      mensaje: `Tu cuenta ha sido ${estado}`,
+      estado
+    });
+
+    res.json({ message: 'Estado actualizado correctamente y notificación enviada' });
   } catch (error) {
     console.error('Error al actualizar estado:', error);
     res.status(500).json({ message: 'Error al actualizar estado del usuario' });
   }
 });
 
-module.exports = router;
+
+  // Endpoint público para consultar datos básicos del usuario por ID (uso entre microservicios)
+  router.get('/usuarios/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+      const usuario = await usuarioModel.traerUsuario(id);
+
+      if (!usuario) {
+        return res.status(404).json({ message: "Usuario no encontrado" });
+      }
+
+      // Solo devuelve lo que necesitas (seguridad)
+      const { id_usuario, nombre, rol, estado } = usuario;
+
+      res.json({ id_usuario, nombre, rol, estado });
+    } catch (error) {
+      console.error('Error al consultar usuario:', error);
+      res.status(500).json({ message: 'Error al consultar usuario' });
+    }
+  });
+
+
+  module.exports = router;
 //Crear, ActualizarU, EliminarU, ConsultarTU, ConsultarU, ValidarCredencialesAUT = Front, Login, ActualizarE

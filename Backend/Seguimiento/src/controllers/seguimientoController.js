@@ -1,24 +1,52 @@
-const {Router} = require('express');
+const { Router } = require('express');
 const router = Router();
-const  seguimientoModel = require ('../models/seguimientoModel');
+const seguimientoModel = require('../models/seguimientoModel');
+const axios = require('axios');
 
-router.get('/seguimiento', async (req, res) =>{
-    var result;
-    result = await seguimientoModel.traerSeguimientos();
-    res.json(result);
+router.get('/seguimiento', async (req, res) => {
+  var result;
+  result = await seguimientoModel.traerSeguimientos();
+  res.json(result);
 })
 
-router.get('/seguimiento/:id_seguimiento', async (req, res) => {
+router.put('/seguimiento/:id_seguimiento', async (req, res) => {
   const id_seguimiento = req.params.id_seguimiento;
-  var result = await seguimientoModel.traerSeguimiento(id_seguimiento);
+  const { fecha_seguimiento, comentarios, estado } = req.body;
 
-  // Verificar si no se encontró el seguimiento
-  if (!result || result.length === 0) {
-    return res.status(404).json({ message: 'Seguimiento no encontrado' });
+  if (!fecha_seguimiento || !comentarios?.trim() || !estado?.trim()) {
+    return res.status(400).send("Todos los campos son obligatorios");
   }
 
-  res.json(result[0]); // Devuelve el primer resultado
+  try {
+    // Actualizar seguimiento
+    const result = await seguimientoModel.actualizarSeguimiento(id_seguimiento, fecha_seguimiento, comentarios, estado);
+    if (result.affectedRows === 0) {
+      return res.status(404).send("El seguimiento no fue encontrado o no se actualizó");
+    }
+
+    // Obtener info de seguimiento
+    const seguimientoData = await seguimientoModel.traerSeguimiento(id_seguimiento);
+    const id_adoptante = seguimientoData[0]?.id_adoptante;
+
+    if (!id_adoptante) {
+      return res.status(404).send("No se encontró el adoptante relacionado");
+    }
+
+    // Enviar notificación
+    await axios.post('http://localhost:3006/notificaciones', {
+      id_usuario: id_adoptante,
+      mensaje: `El estado de seguimiento de tu adopción ha cambiado a: ${estado}`,
+      estado
+    });
+
+    res.status(200).send("Seguimiento actualizado y notificación enviada");
+
+  } catch (error) {
+    console.error("Error en seguimiento:", error.message);
+    res.status(500).send("Error al actualizar seguimiento");
+  }
 });
+
 
 
 router.get('/seguimiento/adoptante/:id_adoptante', async (req, res) => {
@@ -97,24 +125,44 @@ router.put('/seguimiento/:id_seguimiento', async (req, res) => {
 
 
 
-router.post('/seguimiento', async (req, res) =>{
-    const id_solicitud = req.body.id_solicitud;
-    const id_adoptante = req.body.id_adoptante;
-    const id_animal = req.body.id_animal;
-    const comentarios = req.body.comentarios;
-    const estado = req.body.estado;
+router.post('/seguimiento', async (req, res) => {
+  const id_solicitud = req.body.id_solicitud;
+  const id_adoptante = req.body.id_adoptante;
+  const id_animal = req.body.id_animal;
+  const comentarios = req.body.comentarios;
+  const estado = req.body.estado;
 
-    var result = await seguimientoModel.crearSeguimiento(id_solicitud, id_adoptante, id_animal, comentarios, estado);
-    res.send("seguimiento creado");
+
+  var result = await seguimientoModel.crearSeguimiento(id_solicitud, id_adoptante, id_animal, comentarios, estado);
+  res.send("seguimiento creado");
 });
 
 
 
-router.delete('/seguimiento/:id_seguimiento', async (req, res) =>{
+router.delete('/seguimiento/:id_seguimiento', async (req, res) => {
   const id_seguimiento = req.params.id_seguimiento;
   var result;
   result = await seguimientoModel.borrarSeguimiento(id_seguimiento);
   res.send("seguimiento borrado");
+});
+
+
+// DELETE seguimiento por id_solicitud (en seguimientoController.js)
+router.delete('/seguimiento/solicitud/:id_solicitud', async (req, res) => {
+  const id_solicitud = req.params.id_solicitud;
+
+  try {
+    const result = await seguimientoModel.borrarSeguimientoPorSolicitud(id_solicitud);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).send("No se encontró seguimiento para esa solicitud");
+    }
+
+    res.send("Seguimiento eliminado correctamente");
+  } catch (error) {
+    console.error("Error eliminando seguimiento por solicitud:", error.message);
+    res.status(500).send("Error al eliminar seguimiento");
+  }
 });
 
 module.exports = router;

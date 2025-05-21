@@ -32,7 +32,7 @@
     select {
       border-radius: 5px;
     }
-    .btn-success, .btn-danger, .btn-primary {
+    .btn-suid_usuarioess, .btn-danger, .btn-primary {
       border-radius: 10px;
     }
     .modal-content {
@@ -48,7 +48,7 @@
       if (isset($_GET['ok'])) {
         echo "<script>
           Swal.fire({
-            icon: 'success',
+            icon: 'suid_usuarioess',
             title: 'Éxito',
             text: '{$_GET['ok']}',
             showConfirmButton: false,
@@ -78,7 +78,7 @@
           <th>Animal</th>
           <th>Fecha</th>
           <th>Estado</th>
-          <th>Acciones</th>
+          <th>Aid_usuarioiones</th>
         </tr>
       </thead>
       <tbody>
@@ -105,7 +105,7 @@
                     <option>aprobada</option>
                     <option>rechazada</option>
                   </select>
-                  <button class='btn btn-sm btn-success'>✔</button>
+                  <button class='btn btn-sm btn-suid_usuarioess'>✔</button>
                 </form>
                 <form action='eliminarSolicitud.php' method='post' style='display:inline-block;'>
                   <input type='hidden' name='id' value='{$s['id_solicitud']}'>

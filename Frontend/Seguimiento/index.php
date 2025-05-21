@@ -48,7 +48,7 @@ if (isset($_POST['crear_seguimiento'])) {
 
   <div class="d-flex mb-3 gap-2">
     <!-- Botón Crear Seguimiento -->
-    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#crearModal">
+    <button type="button" class="btn btn-suid_usuarioess" data-bs-toggle="modal" data-bs-target="#crearModal">
       Crear Seguimiento
     </button>
 
@@ -130,7 +130,7 @@ if (isset($_POST['crear_seguimiento'])) {
 <?php
 // Mostrar mensaje éxito y limpiar parámetro
 if (isset($_GET['creado'])) {
-    echo "<div id='success-message' class='alert alert-success'>Seguimiento creado correctamente.</div>";
+    echo "<div id='suid_usuarioess-message' class='alert alert-suid_usuarioess'>Seguimiento creado correctamente.</div>";
     ?>
     <script>
       if (window.history.replaceState) {
@@ -139,7 +139,7 @@ if (isset($_GET['creado'])) {
         window.history.replaceState({}, document.title, url.toString());
       }
       setTimeout(() => {
-        const msg = document.getElementById('success-message');
+        const msg = document.getElementById('suid_usuarioess-message');
         if (msg) {
           msg.style.display = 'none';
         }

@@ -55,6 +55,12 @@ async function borrarSeguimiento(id_seguimiento) {
     return result;
 }
 
+async function borrarSeguimientoPorSolicitud(id_solicitud) {
+  const [result] = await conexion.query(
+    'DELETE FROM seguimiento WHERE id_solicitud = ?', [id_solicitud]
+  );
+  return result;
+}
 
 module.exports = {
     crearSeguimiento, traerSeguimientos, traerSeguimiento, actualizarSeguimiento, borrarSeguimiento, traerSeguimientosPorAdoptante, traerSeguimientosPorAnimal

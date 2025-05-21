@@ -4,7 +4,7 @@
   "description": "Página de adopción de animales",
   "main": "index.js",
   "dependencies": {
-    "accepts": "^2.0.0",
+    "aid_usuarioepts": "^2.0.0",
     "basic-auth": "^2.0.1",
     "body-parser": "^2.2.0",
     "bytes": "^3.1.2",

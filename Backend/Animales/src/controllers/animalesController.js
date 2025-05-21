@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const router = Router();
 const animalesModel = require('../models/animalesModels');
+const axios = require('axios');
 
 // Obtener todos los animales
 router.get('/animales', async (req, res) => {
@@ -29,12 +30,29 @@ router.get('/animales/:id', async (req, res) => {
 router.post('/animales', async (req, res) => {
   try {
     const datos = req.body;
+    const { id_usuario } = datos;
+
+    if (!id_usuario) {
+      return res.status(400).send("Falta el ID del usuario");
+    }
+
+    // Consultar el usuario desde microservicio de usuarios
+    const usuarioResp = await axios.get(`http://localhost:3005/usuarios/${id_usuario}`);
+    const usuario = usuarioResp.data;
+
+    if (!usuario || usuario.rol !== 'rescatista') {
+      return res.status(403).send("Solo los rescatistas pueden registrar animales");
+    }
+
+    // Crear el animal si el usuario es válido
     await animalesModel.crearAnimal(datos);
     res.send("Animal registrado con éxito");
   } catch (error) {
+    console.error("Error al registrar animal:", error.message);
     res.status(500).send('Error al registrar animal');
   }
 });
+
 
 // Actualizar animal existente
 router.put('/animales/:id', async (req, res) => {

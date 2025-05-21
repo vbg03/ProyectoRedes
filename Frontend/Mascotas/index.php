@@ -29,7 +29,7 @@
         <th>Estado Salud</th>
         <th>Ubicación</th>
         <th>Estado</th>
-        <th>Acciones</th>
+        <th>Aid_usuarioiones</th>
       </tr>
     </thead>
     <tbody>
@@ -118,7 +118,7 @@
                       </div>
                     </div>
                     <div class='modal-footer mt-3'>
-                      <button type='submit' class='btn btn-success'>Guardar Cambios</button>
+                      <button type='submit' class='btn btn-suid_usuarioess'>Guardar Cambios</button>
                     </div>
                   </form>
                 </div>
@@ -182,7 +182,7 @@
             </div>
           </div>
           <div class="modal-footer mt-3">
-            <button type="submit" class="btn btn-success">Guardar Animal</button>
+            <button type="submit" class="btn btn-suid_usuarioess">Guardar Animal</button>
           </div>
         </form>
       </div>
