@@ -67,6 +67,10 @@ $animales = json_decode($response_animales, true);
   <a href="notificaciones.php" class="btn btn-primary">Ver Notificaciones</a>
 </div>
 
+    <div class="text-right mb-3">
+  <a href="logout.php" class="btn btn-danger">Cerrar Sesión</a>
+</div>
+
     <?php if ($msg): ?>
         <div class="alert alert-success"><?= htmlspecialchars($msg) ?></div>
     <?php endif; ?>
