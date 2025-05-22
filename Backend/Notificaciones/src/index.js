@@ -9,8 +9,9 @@ const app = express();
 app.use(morgan('dev'));
 app.use(express.json());
 
+
 // Usar las rutas del controlador
-app.use('/api', reportesController);
+app.use(reportesController);
 
 // Iniciar el servidor
 app.listen(3003, () => {

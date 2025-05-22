@@ -5,8 +5,15 @@ const connection = mysql.createPool({
   host: 'localhost',
   user: 'root',
   password: '',
-  database: 'pawpalMS' // ⚠️ Cambia esto si ya creaste la base como 'pawpalMS'
+  database: 'adopcionMS' // ⚠️ Cambia esto si ya creaste la base como 'pawpalMS'
 });
+
+const solicitud = await modelo.traerSolicitudPorId(id_solicitud);
+if (!solicitud) {
+  return res.status(404).send("Solicitud no encontrada");
+}
+const id_usuario = solicitud.id_usuario;
+
 
 // Obtener todos los animales
 async function traerAnimales() {

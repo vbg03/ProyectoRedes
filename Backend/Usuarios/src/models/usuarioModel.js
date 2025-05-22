@@ -4,7 +4,7 @@ const connection = mysql.createPool({
   host: 'localhost',
   user: 'root',
   password: '',
-  database: 'usuarios',
+  database: 'adopcionMS',
 });
 
 async function traerUsuarios() {
@@ -13,12 +13,13 @@ async function traerUsuarios() {
 }
 
 async function traerUsuario(id) {
-  const result = await connection.query(
-    'SELECT * FROM usuarios WHERE id = ?',
-    id
+  const [rows] = await connection.query(
+    'SELECT * FROM usuarios WHERE id_usuario = ?',
+    [id]
   );
-  return result[0];
+  return rows[0]; // ✅ Ahora sí devuelves el objeto directamente
 }
+
 
 async function traerUsuarioEmail(identificador) {
   const [rows] = await connection.query(
@@ -31,7 +32,7 @@ async function traerUsuarioEmail(identificador) {
 
 async function actualizarUsuario(id, nombre, email, usuario, password) {
   const [result] = await connection.query(
-    'UPDATE usuarios SET nombre = ?, email = ?, usuario = ?, password = ? WHERE id = ?',
+    'UPDATE usuarios SET nombre = ?, email = ?, usuario = ?, password = ? WHERE id_usuario = ?',
     [nombre, email, usuario, password, id]
   );
   return result;
@@ -39,9 +40,10 @@ async function actualizarUsuario(id, nombre, email, usuario, password) {
 
 async function actualizarEstado(id, estado) {
   const resultEstado = await connection.query(
-    'UPDATE usuarios SET estado = ? WHERE id = ?',
+    'UPDATE usuarios SET estado = ? WHERE id_usuario = ?',
     [estado, id]
   );
+  console.log("🛠 Actualizando estado de usuario:", id, "a", estado);
   return resultEstado;
 }
 
@@ -55,7 +57,7 @@ async function crearUsuario(nombre, id_usuario, email, usuario, password, estado
 
 async function borrarUsuario(id) {
   const result = await connection.query(
-    'DELETE FROM usuarios WHERE id = ?',
+    'DELETE FROM usuarios WHERE id_usuario = ?',
     id
   );
   return result;

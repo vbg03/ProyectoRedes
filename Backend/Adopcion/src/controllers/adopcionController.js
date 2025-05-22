@@ -8,32 +8,6 @@ router.post('/solicitudes', async (req, res) => {
   const { id_usuario, id_animal, fecha } = req.body;
 
   try {
-    // Verificar usuario
-    const usuarioResp = await axios.get(`http://localhost:3005/usuarios/${id_usuario}`);
-    if (!usuarioResp.data) {
-      return res.status(404).send("El usuario no existe");
-    }
-
-    // Verificar animal
-    const animalResp = await axios.get(`http://localhost:3002/animales/${id_animal}`);
-    if (!animalResp.data) {
-      return res.status(404).send("El animal no existe");
-    }
-
-    // Crear la solicitud si ambos existen
-    await modelo.crearSolicitud(id_usuario, id_animal, fecha);
-    res.send("Solicitud registrada");
-  } catch (error) {
-    console.error("Error al procesar la solicitud:", error.message);
-    res.status(500).send("Error interno del servidor");
-  }
-});
-
-// Consultar historial por usuario
-router.post('/solicitudes', async (req, res) => {
-  const { id_usuario, id_animal, fecha } = req.body;
-
-  try {
     // 1. Verificar que el usuario existe
     const usuarioResp = await axios.get(`http://localhost:3005/usuarios/${id_usuario}`);
     if (!usuarioResp.data || usuarioResp.data.length === 0) {
@@ -48,7 +22,7 @@ router.post('/solicitudes', async (req, res) => {
 
     // 3. Crear la solicitud de adopción
     const result = await modelo.crearSolicitud(id_usuario, id_animal, fecha);
-    const id_solicitud = result[0].insertId;
+    const id_solicitud = result.insertId;
 
     // 4. Crear el seguimiento correspondiente
     await axios.post('http://localhost:3004/seguimiento', {
@@ -59,8 +33,8 @@ router.post('/solicitudes', async (req, res) => {
       estado: "pendiente"
     });
 
-    // 5. (Opcional) Notificar al usuario
-    await axios.post('http://localhost:3006/notificaciones', {
+    // 5. Notificar al usuario
+    await axios.post('http://localhost:3003/notificaciones', {
       id_usuario,
       mensaje: "Tu solicitud de adopción ha sido registrada",
       estado: "pendiente"
@@ -91,52 +65,45 @@ router.put('/solicitudes/:id', async (req, res) => {
   }
 
   try {
-    // Actualizar estado
+    // Actualizar estado de la solicitud
     const result = await modelo.actualizarEstado(id_solicitud, estado);
     if (result.affectedRows === 0) {
       return res.status(404).send("Solicitud no encontrada");
     }
 
-    // Obtener la solicitud para saber el id_usuario
-    const solicitudes = await modelo.traerTodasSolicitudes(); // ⚠️ Puedes optimizar si tienes traerSolicitudPorId
+    // Obtener la solicitud para obtener info
+    const solicitudes = await modelo.traerTodasSolicitudes();
     const solicitud = solicitudes.find(s => s.id_solicitud == id_solicitud);
+
     const id_usuario = solicitud?.id_usuario;
+    const id_animal = solicitud?.id_animal;
 
-    if (!id_usuario) {
-      return res.status(404).send("Usuario relacionado no encontrado");
-    }
-
-    // Enviar notificación
-    await axios.post('http://localhost:3006/notificaciones', {
+    // 1. Notificar cambio de estado
+    await axios.post('http://localhost:3003/notificaciones', {
       id_usuario,
       mensaje: `Tu solicitud de adopción fue ${estado}`,
       estado
     });
 
-    res.send("Estado actualizado y notificación enviada");
-  } catch (error) {
-    console.error("Error actualizando estado:", error.message);
-    res.status(500).send("Error interno del servidor");
-  }
-});
-
-
-router.delete('/solicitudes/:id', async (req, res) => {
-  console.log("DELETE /solicitudes/:id activada");
-  try {
-    const id = req.params.id;
-    const result = await modelo.eliminarSolicitud(id);
-
-    if (result.affectedRows === 0) {
-      return res.status(404).send("Solicitud no encontrada");
+    // 2. Si fue aprobada, crear seguimiento automáticamente
+    if (estado === 'aprobada') {
+      await axios.post('http://localhost:3004/seguimiento', {
+        id_solicitud,
+        id_adoptante: id_usuario,
+        id_animal,
+        comentarios: "Seguimiento iniciado tras aprobación",
+        estado: "en proceso"
+      });
     }
 
-    res.send("Solicitud eliminada");
+    res.send("Estado actualizado y notificación enviada");
+
   } catch (error) {
-    console.error("Error eliminando solicitud:", error);
-    res.status(500).send("Error interno del servidor");
+    console.error("Error actualizando solicitud:", error);
+    res.status(500).send("Error al actualizar estado");
   }
 });
+
 
 
 module.exports = router;

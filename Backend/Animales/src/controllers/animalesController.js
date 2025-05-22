@@ -40,9 +40,11 @@ router.post('/animales', async (req, res) => {
     const usuarioResp = await axios.get(`http://localhost:3005/usuarios/${id_usuario}`);
     const usuario = usuarioResp.data;
 
-    if (!usuario || usuario.rol !== 'rescatista') {
-      return res.status(403).send("Solo los rescatistas pueden registrar animales");
+    if (!usuario || usuario.rol !== 'rescatista' || usuario.estado !== 'activo') {
+      return res.status(403).send("Solo los rescatistas activos pueden registrar animales");
     }
+    console.log("Usuario obtenido desde microservicio:", usuario);
+
 
     // Crear el animal si el usuario es válido
     await animalesModel.crearAnimal(datos);

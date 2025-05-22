@@ -32,6 +32,16 @@ async function traerTodasSolicitudes() {
     return result;
 }
 
+// En adopcionModel.js
+async function traerSolicitudPorId(id_solicitud) {
+    const [rows] = await conexion.query(
+        'SELECT * FROM adopcion WHERE id_solicitud = ?',
+        [id_solicitud]
+    );
+    return rows[0]; // devuelve un solo objeto o undefined
+}
+
+
 // Actualizar estado de solicitud
 async function actualizarEstado(id_solicitud, estado) {
     const [result] = await conexion.query(
@@ -64,5 +74,6 @@ module.exports = {
     traerSolicitudesPorUsuario,
     traerTodasSolicitudes,
     actualizarEstado,
-    eliminarSolicitud
+    eliminarSolicitud,
+    traerSolicitudPorId
 };

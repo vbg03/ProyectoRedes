@@ -167,7 +167,7 @@ router.patch('/admin/users/:id/estado', async (req, res) => {
     await usuarioModel.actualizarEstado(id, estado);
 
     // Notificar al usuario sobre el cambio de estado
-    await axios.post('http://localhost:3006/notificaciones', {
+    await axios.post('http://localhost:3003/notificaciones', {
       id_usuario: id,
       mensaje: `Tu cuenta ha sido ${estado}`,
       estado
@@ -181,26 +181,26 @@ router.patch('/admin/users/:id/estado', async (req, res) => {
 });
 
 
-  // Endpoint público para consultar datos básicos del usuario por ID (uso entre microservicios)
-  router.get('/usuarios/:id', async (req, res) => {
-    const { id } = req.params;
+router.get('/usuarios/:id', async (req, res) => {
+  const { id } = req.params;
 
-    try {
-      const usuario = await usuarioModel.traerUsuario(id);
+  try {
+    const usuario = await usuarioModel.traerUsuario(id);
 
-      if (!usuario) {
-        return res.status(404).json({ message: "Usuario no encontrado" });
-      }
-
-      // Solo devuelve lo que necesitas (seguridad)
-      const { id_usuario, nombre, rol, estado } = usuario;
-
-      res.json({ id_usuario, nombre, rol, estado });
-    } catch (error) {
-      console.error('Error al consultar usuario:', error);
-      res.status(500).json({ message: 'Error al consultar usuario' });
+    if (!usuario) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
     }
-  });
+
+    // Solo devuelve lo que necesitas (seguridad)
+    const { id_usuario, nombre, rol, estado } = usuario;
+
+    res.json({ id_usuario, nombre, rol, estado }); // ✅ Asegúrate que rol y estado sí están aquí
+  } catch (error) {
+    console.error('Error al consultar usuario:', error);
+    res.status(500).json({ message: 'Error al consultar usuario' });
+  }
+});
+
 
 
   module.exports = router;

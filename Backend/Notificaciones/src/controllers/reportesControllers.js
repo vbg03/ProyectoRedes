@@ -7,20 +7,21 @@ const axios = require('axios');
 
 // Ruta para crear una notificación
 router.post('/notificaciones', async (req, res) => {
-    const { id_usuario, mensaje, estado } = req.body;
+  const { id_usuario, mensaje, estado } = req.body;
 
-    if (!id_usuario || !mensaje || !estado) {
-        return res.status(400).json({ error: 'Faltan datos obligatorios' });
-    }
+  if (!id_usuario || !mensaje || !estado) {
+    return res.status(400).json({ error: 'Faltan datos obligatorios' });
+  }
 
-    try {
-        const result = await reportesModel.crearNotificacion(id_usuario, mensaje, estado);
-        res.status(201).json({ message: 'Notificación creada', result });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Error al crear la notificación' });
-    }
+  try {
+    const result = await reportesModel.crearNotificacion(id_usuario, mensaje, estado);
+    res.status(201).json({ message: 'Notificación creada', result });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al crear la notificación' });
+  }
 });
+
 
 // Ruta para obtener todas las notificaciones de un usuario
 router.get('/notificaciones', async (req, res) => {
@@ -86,5 +87,7 @@ router.delete('/notificaciones/:id', async (req, res) => {
         res.status(500).json({ error: 'Error al eliminar la notificación' });
     }
 });
+
+
 
 module.exports = router;

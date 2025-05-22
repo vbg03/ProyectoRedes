@@ -7,7 +7,7 @@ const connection = mysql.createPool({
     host: 'localhost',
     user: 'root',
     password: '', 
-    database: 'notificaciones', // Nombre de la base de datos
+    database: 'adopcionMS', // Nombre de la base de datos
 });
 
 // Crear una nueva notificación
@@ -15,8 +15,9 @@ async function crearNotificacion(id_usuario, mensaje, estado) {
     const fecha = new Date(); // Obtiene la fecha y hora actuales
     const query = 'INSERT INTO notificaciones (id_usuario, mensaje, estado, fecha) VALUES (?, ?, ?, ?)';
     const [result] = await connection.query(query, [id_usuario, mensaje, estado, fecha]);
-    return { id_notificacion: result.insertId, id_usuario, mensaje, estado, fecha }; // Incluye la fecha en el retorno
+    return { id_notificacion: result.insertId, id_usuario, mensaje, estado, fecha };
 }
+
 
 // Consultar todas las notificaciones de un usuario
 async function obtenerNotificacionesPorUsuario(id_usuario) {
