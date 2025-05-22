@@ -32,7 +32,7 @@
     select {
       border-radius: 5px;
     }
-    .btn-suid_usuarioess, .btn-danger, .btn-primary {
+    .btn-success, .btn-danger, .btn-primary {
       border-radius: 10px;
     }
     .modal-content {
@@ -45,26 +45,48 @@
   <div class="main-container">
 
     <?php
+      // Mostrar alertas con SweetAlert según parámetros GET
       if (isset($_GET['ok'])) {
+        $msg = htmlspecialchars($_GET['ok']);
         echo "<script>
           Swal.fire({
-            icon: 'suid_usuarioess',
+            icon: 'success',
             title: 'Éxito',
-            text: '{$_GET['ok']}',
+            text: '{$msg}',
             showConfirmButton: false,
             timer: 2000
           });
         </script>";
       } elseif (isset($_GET['error'])) {
+        $msg = htmlspecialchars($_GET['error']);
         echo "<script>
           Swal.fire({
             icon: 'error',
             title: 'Error',
-            text: '{$_GET['error']}',
+            text: '{$msg}',
             showConfirmButton: false,
             timer: 2500
           });
         </script>";
+      }
+
+      // Obtener solicitudes desde el microservicio
+      $url = "http://localhost:3001/solicitudes";
+      $curl = curl_init($url);
+      curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+      $response = curl_exec($curl);
+
+      if ($response === false) {
+        echo "<div class='alert alert-danger'>Error al obtener solicitudes.</div>";
+        curl_close($curl);
+        $solicitudes = [];
+      } else {
+        curl_close($curl);
+        $solicitudes = json_decode($response, true);
+        if (!is_array($solicitudes)) {
+          echo "<div class='alert alert-danger'>Error al procesar datos JSON.</div>";
+          $solicitudes = [];
+        }
       }
     ?>
 
@@ -78,63 +100,66 @@
           <th>Animal</th>
           <th>Fecha</th>
           <th>Estado</th>
-          <th>Aid_usuarioiones</th>
+          <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
-        <?php
-          $url = "http://192.168.100.3:3001/solicitudes/todas";
-          $curl = curl_init($url);
-          curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-          $response = curl_exec($curl);
-          curl_close($curl);
-
-          $solicitudes = json_decode($response, true);
-          foreach ($solicitudes as $s) {
-            echo "<tr>
-              <td>{$s['id_solicitud']}</td>
-              <td>{$s['id_usuario']}</td>
-              <td>{$s['id_animal']}</td>
-              <td>{$s['fecha']}</td>
-              <td>{$s['estado']}</td>
+        <?php if (count($solicitudes) === 0): ?>
+          <tr>
+            <td colspan="6">No hay solicitudes para mostrar.</td>
+          </tr>
+        <?php else: ?>
+          <?php foreach ($solicitudes as $s): ?>
+            <tr>
+              <td><?= htmlspecialchars($s['id_solicitud']) ?></td>
+              <td><?= htmlspecialchars($s['id_usuario']) ?></td>
+              <td><?= htmlspecialchars($s['id_animal']) ?></td>
+              <td><?= htmlspecialchars($s['fecha']) ?></td>
+              <td><?= htmlspecialchars($s['estado']) ?></td>
               <td>
-                <form action='actualizarEstado.php' method='post' style='display:inline-block;'>
-                  <input type='hidden' name='id' value='{$s['id_solicitud']}'>
-                  <select name='estado' class='form-select form-select-sm d-inline w-auto'>
-                    <option>pendiente</option>
-                    <option>aprobada</option>
-                    <option>rechazada</option>
+                <form action="actualizarEstado.php" method="post" style="display:inline-block;">
+                  <input type="hidden" name="id" value="<?= htmlspecialchars($s['id_solicitud']) ?>">
+                  <select name="estado" class="form-select form-select-sm d-inline w-auto">
+                    <option value="pendiente" <?= $s['estado'] === 'pendiente' ? 'selected' : '' ?>>pendiente</option>
+                    <option value="aprobada" <?= $s['estado'] === 'aprobada' ? 'selected' : '' ?>>aprobada</option>
+                    <option value="rechazada" <?= $s['estado'] === 'rechazada' ? 'selected' : '' ?>>rechazada</option>
                   </select>
-                  <button class='btn btn-sm btn-suid_usuarioess'>✔</button>
+                  <button class="btn btn-sm btn-success" type="submit">✔</button>
                 </form>
-                <form action='eliminarSolicitud.php' method='post' style='display:inline-block;'>
-                  <input type='hidden' name='id' value='{$s['id_solicitud']}'>
-                  <button class='btn btn-sm btn-danger'>🗑</button>
+                <form action="eliminarSolicitud.php" method="post" style="display:inline-block;">
+                  <input type="hidden" name="id" value="<?= htmlspecialchars($s['id_solicitud']) ?>">
+                  <button class="btn btn-sm btn-danger" type="submit" onclick="return confirm('¿Seguro que deseas eliminar esta solicitud?')">🗑</button>
                 </form>
               </td>
-            </tr>";
-          }
-        ?>
+            </tr>
+          <?php endforeach; ?>
+        <?php endif; ?>
       </tbody>
     </table>
 
-    <!-- Botón para abrir modal -->
-    <div class="text-center my-3">
+    <!-- Botón para abrir modal de crear solicitud -->
+    <!-- <div class="text-center my-3">
       <button class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#modalCrear">+ Crear Solicitud</button>
     </div>
-  </div>
+  </div> -->
+  <div class="text-center my-3">
+  <a href="http://localhost/Usuarios/index_rescatista.php" class="btn btn-secondary">
+    ← Volver al Panel Rescatista
+  </a>
+</div>
 
-  <!-- Modal -->
-  <div class="modal fade" id="modalCrear" tabindex="-1">
+
+  <!-- Modal para crear nueva solicitud -->
+  <div class="modal fade" id="modalCrear" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog">
       <form class="modal-content" action="crearSolicitud.php" method="post">
         <div class="modal-header">
           <h5 class="modal-title">Nueva Solicitud</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
         </div>
         <div class="modal-body">
-          <input class="form-control mb-2" type="text" name="id_usuario" placeholder="ID Usuario" required pattern="\d+" title="Solo números">
-          <input class="form-control mb-2" type="text" name="id_animal" placeholder="ID Animal" required pattern="\d+" title="Solo números">
+          <input class="form-control mb-2" type="number" name="id_usuario" placeholder="ID Usuario" required min="1" title="Solo números positivos">
+          <input class="form-control mb-2" type="number" name="id_animal" placeholder="ID Animal" required min="1" title="Solo números positivos">
           <input class="form-control mb-2" type="date" name="fecha" required>
         </div>
         <div class="modal-footer">

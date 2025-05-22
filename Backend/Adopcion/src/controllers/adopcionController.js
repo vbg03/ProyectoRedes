@@ -48,10 +48,15 @@ router.post('/solicitudes', async (req, res) => {
 });
 
 
-// Consultar todas las solicitudes
-router.get('/solicitudes/todas', async (req, res) => {
-  const result = await modelo.traerTodasSolicitudes();
-  res.json(result);
+// Obtener todas las solicitudes
+router.get('/solicitudes', async (req, res) => {
+  try {
+    const result = await modelo.traerTodasSolicitudes();
+    res.json(result);
+  } catch (error) {
+    console.error('Error al obtener las solicitudes:', error);
+    res.status(500).send('Error al obtener solicitudes');
+  }
 });
 
 // Cambiar estado de solicitud

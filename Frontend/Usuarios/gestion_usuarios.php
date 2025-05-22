@@ -1,21 +1,39 @@
 <?php
+// gestion_usuarios.php
 
-include 'conexion.php';
+// Obtener todos los usuarios vía API REST
+$url = "http://localhost:3005/admin/users";
 
-// Obtener usuarios activos
-$activos_sql = "SELECT * FROM usuarios WHERE estado = 'activo'";
-$activos_resultado = $conn->query($activos_sql);
+$curl = curl_init($url);
+curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+$response = curl_exec($curl);
+curl_close($curl);
 
-// Obtener usuarios inactivos
-$inactivos_sql = "SELECT * FROM usuarios WHERE estado = 'inactivo'";
-$inactivos_resultado = $conn->query($inactivos_sql);
+$usuarios = json_decode($response, true);
+
+// Separar usuarios activos e inactivos
+$activos = [];
+$inactivos = [];
+
+if ($usuarios && is_array($usuarios)) {
+    foreach ($usuarios as $u) {
+        if (isset($u['estado']) && $u['estado'] === 'activo') {
+            $activos[] = $u;
+        } else {
+            $inactivos[] = $u;
+        }
+    }
+} else {
+    $activos = [];
+    $inactivos = [];
+}
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gestión de Usuarios</title>
   <style>
     body {
@@ -102,6 +120,9 @@ $inactivos_resultado = $conn->query($inactivos_sql);
   </style>
 </head>
 <body>
+  <div style="text-align: right; margin-bottom: 1rem;">
+  <a href="logout.php" style="color: #dc3545; font-weight: bold; text-decoration:none;">Cerrar Sesión</a>
+ </div>
   <div class="container">
     <h2>Gestión de Usuarios</h2>
 
@@ -116,24 +137,24 @@ $inactivos_resultado = $conn->query($inactivos_sql);
         <th>Usuario</th>
         <th>Estado</th>
         <th>Rol</th>
-        <th>Aid_usuarioiones</th>
+        <th>Acciones</th>
       </tr>
-      <?php while($fila = $activos_resultado->fetch_assoc()): ?>
+      <?php foreach($activos as $fila): ?>
       <tr>
-        <td><?= $fila['id'] ?></td>
-        <td><?= $fila['nombre'] ?></td>
-        <td><?= $fila['id_usuario'] ?></td>
-        <td><?= $fila['email'] ?></td>
-        <td><?= $fila['usuario'] ?></td>
-        <td><?= $fila['estado'] ?></td>
-        <td><?= $fila['rol'] ?></td>
+        <td><?= htmlspecialchars($fila['id_usuario']) ?></td>
+        <td><?= htmlspecialchars($fila['nombre']) ?></td>
+        <td><?= htmlspecialchars($fila['id_usuario']) ?></td>
+        <td><?= htmlspecialchars($fila['email']) ?></td>
+        <td><?= htmlspecialchars($fila['usuario']) ?></td>
+        <td><?= htmlspecialchars($fila['estado']) ?></td>
+        <td><?= htmlspecialchars($fila['rol']) ?></td>
         <td>
-          <button class="btn-estado" onclick="cambiarEstado(<?= $fila['id'] ?>)">Desactivar</button>
-          <button class="btn-editar" onclick='abrirEditarModal(<?= json_encode($fila) ?>)'>Editar</button>
-          <button class="btn-eliminar" onclick="confirmarEliminar(<?= $fila['id'] ?>)">Eliminar</button>
+          <button class="btn-estado" onclick="cambiarEstado('<?= htmlspecialchars($fila['id_usuario']) ?>')">Desactivar</button>
+          <!-- <button class="btn-editar" onclick='abrirEditarModal(<?= json_encode($fila, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>)'>Editar</button> -->
+          <button class="btn-eliminar" onclick="confirmarEliminar('<?= htmlspecialchars($fila['id_usuario']) ?>')">Eliminar</button>
         </td>
       </tr>
-      <?php endwhile; ?>
+      <?php endforeach; ?>
     </table>
 
     <!-- Tabla de usuarios INACTIVOS -->
@@ -147,24 +168,24 @@ $inactivos_resultado = $conn->query($inactivos_sql);
         <th>Usuario</th>
         <th>Estado</th>
         <th>Rol</th>
-        <th>Aid_usuarioiones</th>
+        <th>Acciones</th>
       </tr>
-      <?php while($fila = $inactivos_resultado->fetch_assoc()): ?>
+      <?php foreach($inactivos as $fila): ?>
       <tr>
-        <td><?= $fila['id'] ?></td>
-        <td><?= $fila['nombre'] ?></td>
-        <td><?= $fila['id_usuario'] ?></td>
-        <td><?= $fila['email'] ?></td>
-        <td><?= $fila['usuario'] ?></td>
-        <td><?= $fila['estado'] ?></td>
-        <td><?= $fila['rol'] ?></td>
+        <td><?= htmlspecialchars($fila['id_usuario']) ?></td>
+        <td><?= htmlspecialchars($fila['nombre']) ?></td>
+        <td><?= htmlspecialchars($fila['id_usuario']) ?></td>
+        <td><?= htmlspecialchars($fila['email']) ?></td>
+        <td><?= htmlspecialchars($fila['usuario']) ?></td>
+        <td><?= htmlspecialchars($fila['estado']) ?></td>
+        <td><?= htmlspecialchars($fila['rol']) ?></td>
         <td>
-          <button class="btn-estado" onclick="cambiarEstado(<?= $fila['id'] ?>)">Activar</button>
-          <button class="btn-editar" onclick='abrirEditarModal(<?= json_encode($fila) ?>)'>Editar</button>
-          <button class="btn-eliminar" onclick="confirmarEliminar(<?= $fila['id'] ?>)">Eliminar</button>
+          <button class="btn-estado" onclick="cambiarEstado('<?= htmlspecialchars($fila['id_usuario']) ?>')">Activar</button>
+          <button class="btn-editar" onclick='abrirEditarModal(<?= json_encode($fila, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>)'>Editar</button>
+          <button class="btn-eliminar" onclick="confirmarEliminar('<?= htmlspecialchars($fila['id_usuario']) ?>')">Eliminar</button>
         </td>
       </tr>
-      <?php endwhile; ?>
+      <?php endforeach; ?>
     </table>
   </div>
 
@@ -175,11 +196,11 @@ $inactivos_resultado = $conn->query($inactivos_sql);
      <h3>Editar Usuario</h3>
      <form id="formEditar">
        <input type="hidden" id="edit-id" name="id">
-       <input type="text" id="edit-nombre" name="nombre" placeholder="Nombre">
+       <input type="text" id="edit-nombre" name="nombre" placeholder="Nombre" required>
        <input type="number" id="edit-id_usuario" name="id_usuario" placeholder="Cédula" readonly>
-       <input type="email" id="edit-email" name="email" placeholder="Correo">
-       <input type="text" id="edit-usuario" name="usuario" placeholder="Usuario">
-       <!-- El rol no se puede editar, así que se quita del formulario -->
+       <input type="email" id="edit-email" name="email" placeholder="Correo" required>
+       <input type="text" id="edit-usuario" name="usuario" placeholder="Usuario" required>
+       <!-- No se edita rol ni contraseña aquí -->
        <button type="submit">Guardar</button>
      </form>
    </div>
@@ -202,13 +223,14 @@ $inactivos_resultado = $conn->query($inactivos_sql);
       fetch('cambiar_estado.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: `id=${id}`
+        body: `id=${encodeURIComponent(id)}`
       }).then(() => location.reload());
     }
 
     function abrirEditarModal(data) {
-        document.getElementById('edit-id').value = data.id;
+        document.getElementById('edit-id').value = data.id_usuario;
         document.getElementById('edit-nombre').value = data.nombre;
+        document.getElementById('edit-id_usuario').value = data.id_usuario;
         document.getElementById('edit-email').value = data.email;
         document.getElementById('edit-usuario').value = data.usuario;
         document.getElementById('editarModal').style.display = 'flex';
@@ -226,9 +248,9 @@ $inactivos_resultado = $conn->query($inactivos_sql);
                 nombre: datos.get('nombre'),
                 email: datos.get('email'),
                 usuario: datos.get('usuario'),
-                password: '' // No se actualiza la contraseña aquí
+                password: '' // No actualizamos contraseña aquí
             })
-        }) 
+        })
         .then(response => {
             if (!response.ok) {
                 return response.json().then(err => { throw new Error(err.message) });
@@ -236,16 +258,15 @@ $inactivos_resultado = $conn->query($inactivos_sql);
             return response.json();
         })
         .then(data => {
-            console.log(data.message);
-            cerrarModales(); 
-            location.reload(); // ✅ Recarga la tabla
-            })
-            .catch(error => {
-                alert("Error al actualizar: " + error.message);
-                console.error('Error:', error);
-            });
+            alert(data.message);
+            cerrarModales();
+            location.reload();
+        })
+        .catch(error => {
+            alert("Error al actualizar: " + error.message);
+            console.error('Error:', error);
         });
-
+    });
 
     function confirmarEliminar(id) {
       usuarioAEliminar = id;
@@ -256,7 +277,7 @@ $inactivos_resultado = $conn->query($inactivos_sql);
       fetch('eliminar_usuario.php', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: `id=${usuarioAEliminar}`
+        body: `id=${encodeURIComponent(usuarioAEliminar)}`
       }).then(() => location.reload());
     }
 

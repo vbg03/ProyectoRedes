@@ -8,11 +8,11 @@ const connection = mysql.createPool({
   database: 'adopcionMS' // ⚠️ Cambia esto si ya creaste la base como 'pawpalMS'
 });
 
-const solicitud = await modelo.traerSolicitudPorId(id_solicitud);
-if (!solicitud) {
-  return res.status(404).send("Solicitud no encontrada");
-}
-const id_usuario = solicitud.id_usuario;
+// const solicitud = await modelo.traerSolicitudPorId(id_solicitud);
+// if (!solicitud) {
+//   return res.status(404).send("Solicitud no encontrada");
+// }
+// const id_usuario = solicitud.id_usuario;
 
 
 // Obtener todos los animales

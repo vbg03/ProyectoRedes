@@ -13,6 +13,12 @@
   <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#crearModal">
     ➕ Registrar Nuevo Animal
   </button>
+  <div class="mb-3">
+   <a href="http://localhost/Usuarios/index_rescatista.php" class="btn btn-secondary">
+     ← Regresar al Panel Rescatista
+   </a>
+  </div>
+
 
   <!-- Tabla de animales -->
   <table class="table table-striped table-hover">
@@ -29,7 +35,7 @@
         <th>Estado Salud</th>
         <th>Ubicación</th>
         <th>Estado</th>
-        <th>Aid_usuarioiones</th>
+        <th>Acciones</th>
       </tr>
     </thead>
     <tbody>
@@ -118,7 +124,7 @@
                       </div>
                     </div>
                     <div class='modal-footer mt-3'>
-                      <button type='submit' class='btn btn-suid_usuarioess'>Guardar Cambios</button>
+                      <button type='submit' class='btn btn-success'>Guardar Cambios</button>
                     </div>
                   </form>
                 </div>
@@ -182,7 +188,7 @@
             </div>
           </div>
           <div class="modal-footer mt-3">
-            <button type="submit" class="btn btn-suid_usuarioess">Guardar Animal</button>
+            <button type="submit" class="btn btn-success">Guardar Animal</button>
           </div>
         </form>
       </div>

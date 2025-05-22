@@ -1,26 +1,38 @@
 <?php
 session_start();
-include 'conexion.php';
 
 $error = '';
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $input = $_POST["input"];
-    $password = $_POST["password"];
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $identificador = $_POST['identificador'] ?? '';
+    $contrasena = $_POST['contrasena'] ?? '';
 
-    $sql = "SELECT * FROM usuarios WHERE (email = ? OR usuario = ?) AND password = ? AND estado = 'activo'";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sss", $input, $input, $password);
-    $stmt->execute();
-    $resultado = $stmt->get_result();
+    $data = [
+        'usuario' => $identificador,
+        'email' => $identificador,
+        'password' => $contrasena
+    ];
 
-    if ($resultado->num_rows == 1) {
-        $usuario = $resultado->fetch_assoc();
+    $json = json_encode($data);
+
+    $ch = curl_init('http://localhost:3005/login');
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
+    curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    $response = curl_exec($ch);
+    $httpcode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    curl_close($ch);
+
+    if ($httpcode == 200) {
+        $usuario = json_decode($response, true)['usuario'];
         $_SESSION['usuario'] = $usuario;
-        header("Location: gestion_usuarios.php");
+        header('Location: gestion_usuarios.php'); // o la página que desees tras login
         exit();
     } else {
-        $error = "Credenciales incorrectas.";
+        $resp = json_decode($response, true);
+        $error = $resp['message'] ?? 'Credenciales incorrectas.';
     }
 }
 ?>
@@ -28,9 +40,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Iniciar Sesión</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet" />
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -62,8 +74,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             width: 100%;
             padding: 12px;
             margin: 8px 0 16px 0;
-            border: 1px solid #id_usuarioc;
+            border: 1px solid #ccc;
             border-radius: 8px;
+            font-size: 14px;
         }
         button {
             width: 100%;
@@ -83,16 +96,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <div class="form-container">
         <h2>Iniciar Sesión</h2>
-        <?php if (!empty($error)) echo "<div class='error'>$error</div>"; ?>
+        <?php if (!empty($error)): ?>
+            <div class="error"><?= htmlspecialchars($error) ?></div>
+        <?php endif; ?>
         <form method="POST" action="procesar_login.php">
-            <input type="text" name="identificador" placeholder="Correo o Usuario" required>
-            <input type="password" name="contrasena" placeholder="Contraseña" required>
+            <input type="text" name="identificador" placeholder="Correo o Usuario" required />
+            <input type="password" name="contrasena" placeholder="Contraseña" required />
             <button type="submit">Ingresar</button>
         </form>
         <p style="text-align: center; margin-top: 16px;">
             ¿No tienes cuenta? <a href="registro.php">Regístrate aquí</a>
         </p>
-
     </div>
 </body>
 </html>

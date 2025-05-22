@@ -67,7 +67,7 @@ if ($id_usuario_consulta) {
         </div>
 
         <div class="mb-3">
-            <label for="mensaje" class="form-label">Seleid_usuarioiona un mensaje</label>
+            <label for="mensaje" class="form-label">Selecciona un mensaje</label>
             <select class="form-control" id="mensaje" name="mensaje" onchange="actualizarEstado()" required>
                 <option value="Tu solicitud ha sido aceptada">Tu solicitud ha sido aceptada</option>
                 <option value="Tu solicitud ha sido rechazada">Tu solicitud ha sido rechazada</option>
@@ -103,7 +103,7 @@ if ($id_usuario_consulta) {
             <input type="number" class="form-control" id="id_usuario" name="id_usuario" value="<?= htmlspecialchars($id_usuario_consulta ?? '') ?>" placeholder="ID Usuario">
         </div>
 
-        <button type="submit" class="btn btn-suid_usuarioess">Filtrar Notificaciones</button>
+        <button type="submit" class="btn btn-success">Filtrar Notificaciones</button>
     </form>
 
     <!-- Tabla para mostrar las notificaciones -->
@@ -115,7 +115,7 @@ if ($id_usuario_consulta) {
             <th>Mensaje</th>
             <th>Estado</th>
             <th>Fecha</th>
-            <th>Aid_usuarioiones</th>
+            <th>Acciones</th>
         </tr>
         </thead>
         <tbody>
