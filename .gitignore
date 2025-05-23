@@ -4,3 +4,10 @@
 /Backend/Adopcion/node_modules
 /Backend/Notificaciones/node_modules
 /Backend/Seguimiento/node_modules
+
+**/node_modules/
+
+# Ignorar ejecutables grandes
+*.exe
+*.dll
+*.bin
