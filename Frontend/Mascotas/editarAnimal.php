@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     "ubicacion" => $_POST["ubicacion"]
   ];
 
-  $url = "http://localhost:3002/animales/$id";
+  $url = "http://192.168.100.3:3002/animales/$id";
   $ch = curl_init($url);
 
   curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");

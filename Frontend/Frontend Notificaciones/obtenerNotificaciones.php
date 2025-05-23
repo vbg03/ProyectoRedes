@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_usuario'], $_POST[
             'estado' => $estado
         ]);
 
-        $ch = curl_init("http://localhost:3003/api/notificaciones");
+        $ch = curl_init("http://192.168.100.3:3003/api/notificaciones");
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
         curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
@@ -35,7 +35,7 @@ $estado_consulta = $_GET['estado'] ?? null;
 
 if ($id_usuario_consulta) {
     // Llamada a la API para obtener las notificaciones filtradas
-    $url = "http://localhost:3003/api/notificaciones?usuario=" . urlencode($id_usuario_consulta);
+    $url = "http://192.168.100.3:3003/api/notificaciones?usuario=" . urlencode($id_usuario_consulta);
     
     if ($estado_consulta) {
         $url .= "&estado=" . urlencode($estado_consulta);

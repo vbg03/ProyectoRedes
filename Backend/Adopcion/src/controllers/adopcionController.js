@@ -9,13 +9,13 @@ router.post('/solicitudes', async (req, res) => {
 
   try {
     // 1. Verificar que el usuario existe
-    const usuarioResp = await axios.get(`http://localhost:3005/usuarios/${id_usuario}`);
+    const usuarioResp = await axios.get(`http://192.168.100.2:3005/usuarios/${id_usuario}`);
     if (!usuarioResp.data || usuarioResp.data.length === 0) {
       return res.status(404).send("El usuario no existe");
     }
 
     // 2. Verificar que el animal existe
-    const animalResp = await axios.get(`http://localhost:3002/animales/${id_animal}`);
+    const animalResp = await axios.get(`http://192.168.100.2:3002/animales/${id_animal}`);
     if (!animalResp.data) {
       return res.status(404).send("El animal no existe");
     }
@@ -25,7 +25,7 @@ router.post('/solicitudes', async (req, res) => {
     const id_solicitud = result.insertId;
 
     // 4. Crear el seguimiento correspondiente
-    await axios.post('http://localhost:3004/seguimiento', {
+    await axios.post('http://192.168.100.2:3004/seguimiento', {
       id_solicitud,
       id_adoptante: id_usuario,
       id_animal,
@@ -34,7 +34,7 @@ router.post('/solicitudes', async (req, res) => {
     });
 
     // 5. Notificar al usuario
-    await axios.post('http://localhost:3003/notificaciones', {
+    await axios.post('http://192.168.100.2:3003/notificaciones', {
       id_usuario,
       mensaje: "Tu solicitud de adopción ha sido registrada",
       estado: "pendiente"
@@ -84,7 +84,7 @@ router.put('/solicitudes/:id', async (req, res) => {
     const id_animal = solicitud?.id_animal;
 
     // 1. Notificar cambio de estado
-    await axios.post('http://localhost:3003/notificaciones', {
+    await axios.post('http://192.168.100.2:3003/notificaciones', {
       id_usuario,
       mensaje: `Tu solicitud de adopción fue ${estado}`,
       estado
@@ -92,7 +92,7 @@ router.put('/solicitudes/:id', async (req, res) => {
 
     // 2. Si fue aprobada, crear seguimiento automáticamente
     if (estado === 'aprobada') {
-      await axios.post('http://localhost:3004/seguimiento', {
+      await axios.post('http://192.168.100.2:3004/seguimiento', {
         id_solicitud,
         id_adoptante: id_usuario,
         id_animal,

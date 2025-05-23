@@ -7,7 +7,7 @@ if (!$id || !is_numeric($id)) {
     exit();
 }
 
-$url = "http://localhost:3001/solicitudes/$id";
+$url = "http://192.168.100.3:3001/solicitudes/$id";
 
 $ch = curl_init($url);
 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");

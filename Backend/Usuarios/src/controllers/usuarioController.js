@@ -167,7 +167,7 @@ router.patch('/admin/users/:id/estado', async (req, res) => {
     await usuarioModel.actualizarEstado(id, estado);
 
     // Notificar al usuario sobre el cambio de estado
-    await axios.post('http://localhost:3003/notificaciones', {
+    await axios.post('http://192.168.100.2:3003/notificaciones', {
       id_usuario: id,
       mensaje: `Tu cuenta ha sido ${estado}`,
       estado

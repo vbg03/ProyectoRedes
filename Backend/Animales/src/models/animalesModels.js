@@ -2,10 +2,11 @@ const mysql = require('mysql2/promise');
 
 // Pool de conexión a MySQL
 const connection = mysql.createPool({
-  host: 'localhost',
+  host: '192.168.100.2',
   user: 'root',
-  password: '',
-  database: 'adopcionMS' // ⚠️ Cambia esto si ya creaste la base como 'pawpalMS'
+  password: 'Juanpabloh18@',
+  database: 'adopcionms',
+  port: '3306' // ⚠️ Cambia esto si ya creaste la base como 'pawpalMS'
 });
 
 // const solicitud = await modelo.traerSolicitudPorId(id_solicitud);

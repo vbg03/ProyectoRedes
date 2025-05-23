@@ -8,7 +8,7 @@ echo "<script>console.log('Estado recibido: " . json_encode($estado) . "');</scr
 $data = json_encode(['estado' => $estado]);
 echo "<script>console.log('Datos JSON enviados: " . addslashes($data) . "');</script>";
 
-$url = "http://localhost:3001/solicitudes/$id";
+$url = "http://192.168.100.3:3001/solicitudes/$id";
 echo "<script>console.log('URL destino: " . addslashes($url) . "');</script>";
 
 $ch = curl_init($url);

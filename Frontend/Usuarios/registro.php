@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $json = json_encode($data);
 
-    $ch = curl_init('http://localhost:3005/register');
+    $ch = curl_init('http://192.168.100.3:3005/register');
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, $json);
     curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);

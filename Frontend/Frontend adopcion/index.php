@@ -71,7 +71,7 @@
       }
 
       // Obtener solicitudes desde el microservicio
-      $url = "http://localhost:3001/solicitudes";
+      $url = "http://192.168.100.3:3001/solicitudes";
       $curl = curl_init($url);
       curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
       $response = curl_exec($curl);
@@ -143,7 +143,7 @@
     </div>
   </div> -->
   <div class="text-center my-3">
-  <a href="http://localhost/Usuarios/index_rescatista.php" class="btn btn-secondary">
+  <a href="http://192.168.100.3/Usuarios/index_rescatista.php" class="btn btn-secondary">
     ← Volver al Panel Rescatista
   </a>
 </div>

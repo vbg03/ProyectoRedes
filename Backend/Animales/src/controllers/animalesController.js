@@ -37,7 +37,7 @@ router.post('/animales', async (req, res) => {
     }
 
     // Consultar el usuario desde microservicio de usuarios
-    const usuarioResp = await axios.get(`http://localhost:3005/usuarios/${id_usuario}`);
+    const usuarioResp = await axios.get(`http://192.168.100.2:3005/usuarios/${id_usuario}`);
     const usuario = usuarioResp.data;
 
     if (!usuario || usuario.rol !== 'rescatista' || usuario.estado !== 'activo') {

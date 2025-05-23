@@ -14,7 +14,7 @@
     ➕ Registrar Nuevo Animal
   </button>
   <div class="mb-3">
-   <a href="http://localhost/Usuarios/index_rescatista.php" class="btn btn-secondary">
+   <a href="http://192.168.100.3/Usuarios/index_rescatista.php" class="btn btn-secondary">
      ← Regresar al Panel Rescatista
    </a>
   </div>
@@ -40,7 +40,7 @@
     </thead>
     <tbody>
       <?php
-        $url = "http://localhost:3002/animales";
+        $url = "http://192.168.100.3:3002/animales";
         $curl = curl_init($url);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         $response = curl_exec($curl);

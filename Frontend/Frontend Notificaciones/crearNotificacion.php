@@ -18,7 +18,7 @@ $json_data = json_encode($data);
 $ch = curl_init();
 
 // Configuramos las opciones de cURL para enviar la solicitud POST
-curl_setopt($ch, CURLOPT_URL, "http://localhost:3003/api/notificaciones");
+curl_setopt($ch, CURLOPT_URL, "http://192.168.100.3:3003/api/notificaciones");
 curl_setopt($ch, CURLOPT_POST, true);
 curl_setopt($ch, CURLOPT_POSTFIELDS, $json_data);
 curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));

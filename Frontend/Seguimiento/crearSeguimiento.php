@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $json_data = json_encode($data);
 
-    $curl = curl_init('http://localhost:3004/seguimiento');
+    $curl = curl_init('http://192.168.100.3:3004/seguimiento');
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curl, CURLOPT_POST, true);
     curl_setopt($curl, CURLOPT_POSTFIELDS, $json_data);

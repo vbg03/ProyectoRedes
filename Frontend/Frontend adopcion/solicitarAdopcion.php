@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     ];
 
     // Enviar solicitud de adopción al microservicio
-    $url = 'http://localhost:3001/solicitudes'; // Microservicio de Adopción
+    $url = 'http://192.168.100.3:3001/solicitudes'; // Microservicio de Adopción
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_POST, true);
     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));

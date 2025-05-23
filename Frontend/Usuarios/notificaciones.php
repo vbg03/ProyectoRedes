@@ -12,7 +12,7 @@ $rol = $_SESSION['usuario']['rol'];
 $id_usuario_consulta = $_GET['id_usuario'] ?? $id_usuario_sesion;
 
 // Construir la URL para la API
-$url = "http://localhost:3003/notificaciones?usuario=" . urlencode($id_usuario_consulta);
+$url = "http://192.168.100.3:3003/notificaciones?usuario=" . urlencode($id_usuario_consulta);
 
 // Obtener notificaciones
 $curl = curl_init($url);

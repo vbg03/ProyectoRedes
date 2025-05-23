@@ -3,7 +3,7 @@ if (isset($_POST['id'])) {
     $id = $_POST['id'];
 
     // Paso 1: Obtener usuario para saber estado actual
-    $url_get = "http://localhost:3005/admin/users/$id";
+    $url_get = "http://192.168.100.3:3005/admin/users/$id";
 
     $ch = curl_init($url_get);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -31,7 +31,7 @@ if (isset($_POST['id'])) {
     $nuevo_estado = ($estado_actual === 'activo') ? 'inactivo' : 'activo';
 
     // Paso 3: Actualizar estado con PATCH
-    $url_patch = "http://localhost:3005/admin/users/$id/estado";
+    $url_patch = "http://192.168.100.3:3005/admin/users/$id/estado";
 
     $data = json_encode(['estado' => $nuevo_estado]);
 

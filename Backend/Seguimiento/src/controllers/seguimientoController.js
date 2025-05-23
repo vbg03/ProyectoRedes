@@ -33,7 +33,7 @@ router.put('/seguimiento/:id_seguimiento', async (req, res) => {
     }
 
     // Enviar notificación
-    await axios.post('http://localhost:3003/notificaciones', {
+    await axios.post('http://192.168.100.2:3003/notificaciones', {
       id_usuario: id_adoptante,
       mensaje: `El estado de seguimiento de tu adopción ha cambiado a: ${estado}`,
       estado

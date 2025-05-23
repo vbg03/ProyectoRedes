@@ -9,7 +9,7 @@ if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['rol'] !== 'rescatista'
 $ver_todos = isset($_GET['ver_todos']) && $_GET['ver_todos'] == '1';
 
 // Obtener todos los animales del microservicio
-$url = "http://localhost:3002/animales";
+$url = "http://192.168.100.3:3002/animales";
 $curl = curl_init($url);
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 $response = curl_exec($curl);
@@ -51,15 +51,15 @@ if ($animales && is_array($animales)) {
   <a href="notificaciones.php" class="btn btn-primary">Ver Notificaciones</a>
 </div>
 
-    <a href="http://localhost/Mascotas/index.php" target="_self" class="btn btn-primary btn-lg mb-4">
+    <a href="http://192.168.100.3/Mascotas/index.php" target="_self" class="btn btn-primary btn-lg mb-4">
       Gestión de mascotas
     </a>
 
-    <a href="http://localhost/Frontend%20adopcion/index.php" target="_self" class="btn btn-success btn-lg mb-4">
+    <a href="http://192.168.100.3/Frontend%20adopcion/index.php" target="_self" class="btn btn-success btn-lg mb-4">
       Ver solicitudes de adopción
     </a>
 
-    <a href="http://localhost/seguimiento/index.php" target="_self" class="btn btn-info btn-lg mb-4">
+    <a href="http://192.168.100.3/seguimiento/index.php" target="_self" class="btn btn-info btn-lg mb-4">
       Ver Seguimientos
     </a>
 

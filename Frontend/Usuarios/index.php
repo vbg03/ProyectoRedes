@@ -14,7 +14,7 @@
 <h2>Usuarios registrados</h2>
 
 <?php
-$url = "http://localhost:3005/admin/users";
+$url = "http://192.168.100.3:3005/admin/users";
 
 $curl = curl_init($url);
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);

@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_animal'], $_POST['
     ];
 
     $json = json_encode($data);
-    $url = 'http://localhost:3001/solicitudes';
+    $url = 'http://192.168.100.3:3001/solicitudes';
 
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_POST, true);
@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id_animal'], $_POST['
 }
 
 // Obtener animales disponibles
-$url_animales = "http://localhost:3002/animales";
+$url_animales = "http://192.168.100.3:3002/animales";
 $curl = curl_init($url_animales);
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 $response_animales = curl_exec($curl);

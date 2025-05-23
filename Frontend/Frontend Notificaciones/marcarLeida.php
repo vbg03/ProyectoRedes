@@ -3,7 +3,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = $_POST['id'];
 
     // URL de la API para marcar la notificación como leída
-    $url = 'http://localhost:3003/api/notificaciones/' . $id;
+    $url = 'http://192.168.100.3:3003/api/notificaciones/' . $id;
 
     $data = array(
         'estado' => 'leída'

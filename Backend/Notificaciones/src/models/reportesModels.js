@@ -4,10 +4,11 @@ const mysql = require('mysql2/promise');
 
 // Crear la conexión a la base de datos
 const connection = mysql.createPool({
-    host: 'localhost',
+    host: '192.168.100.2',
     user: 'root',
-    password: '', 
-    database: 'adopcionMS', // Nombre de la base de datos
+    password: 'Juanpabloh18@', 
+    database: 'adopcionms',
+    port: '3306' // Nombre de la base de datos
 });
 
 // Crear una nueva notificación

@@ -4,7 +4,7 @@
 // Obtener filtro id_animal del GET
 $filtro_id_animal = $_GET['filtro_id_animal'] ?? null;
 
-$url_api = 'http://localhost:3004/seguimiento';
+$url_api = 'http://192.168.100.3:3004/seguimiento';
 
 if ($filtro_id_animal !== null && $filtro_id_animal !== '') {
     $url_api .= '/animal/' . intval($filtro_id_animal);

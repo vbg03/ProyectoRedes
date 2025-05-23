@@ -2,7 +2,7 @@
 if (isset($_POST['id'])) {
     $id = $_POST['id'];
 
-    $url = "http://localhost:3005/admin/users/" . urlencode($id);
+    $url = "http://192.168.100.3:3005/admin/users/" . urlencode($id);
 
     $ch = curl_init($url);
     curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");

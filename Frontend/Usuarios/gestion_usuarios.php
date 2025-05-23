@@ -2,7 +2,7 @@
 // gestion_usuarios.php
 
 // Obtener todos los usuarios vía API REST
-$url = "http://localhost:3005/admin/users";
+$url = "http://192.168.100.3:3005/admin/users";
 
 $curl = curl_init($url);
 curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -241,7 +241,7 @@ if ($usuarios && is_array($usuarios)) {
         const datos = new FormData(this);
         const id = datos.get('id');
 
-        fetch(`http://localhost:3005/admin/users/${id}`, {
+        fetch(`http://192.168.100.3:3005/admin/users/${id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

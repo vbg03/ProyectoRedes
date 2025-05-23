@@ -3,10 +3,11 @@ const mysql = require('mysql2/promise');
 const axios = require('axios'); // Para llamar al microservicio de seguimiento
 
 const conexion = mysql.createPool({
-    host: 'localhost',
+    host: '192.168.100.2',
     user: 'root',
-    password: '',
-    database: 'adopcionMS'
+    password: 'Juanpabloh18@',
+    database: 'adopcionms',
+    port: '3306'
 });
 
 // Crear solicitud y devolver el ID insertado
@@ -55,7 +56,7 @@ async function actualizarEstado(id_solicitud, estado) {
 async function eliminarSolicitud(id_solicitud) {
     // 1. Eliminar el seguimiento relacionado (si existe)
     try {
-        await axios.delete(`http://localhost:3004/seguimiento/solicitud/${id_solicitud}`);
+        await axios.delete(`http://192.168.100.2:3004/seguimiento/solicitud/${id_solicitud}`);
     } catch (error) {
         console.warn(`⚠️ No se pudo borrar el seguimiento relacionado a la solicitud ${id_solicitud}:`, error.message);
         // No cortamos el flujo si no hay seguimiento

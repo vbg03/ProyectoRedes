@@ -10,7 +10,7 @@ if (!$data['id_usuario'] || !$data['id_animal'] || !$data['fecha']) {
 }
 
 $json = json_encode($data);
-$url = 'http://localhost:3001/solicitudes';
+$url = 'http://192.168.100.3:3001/solicitudes';
 
 $ch = curl_init($url);
 curl_setopt($ch, CURLOPT_POST, true);

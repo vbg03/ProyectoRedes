@@ -17,7 +17,7 @@ if (isset($_POST['crear_seguimiento'])) {
 
     $json_data = json_encode($data);
 
-    $curl = curl_init('http://localhost:3004/seguimiento');
+    $curl = curl_init('http://192.168.100.3:3004/seguimiento');
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($curl, CURLOPT_POST, true);
     curl_setopt($curl, CURLOPT_POSTFIELDS, $json_data);
@@ -64,7 +64,7 @@ if (isset($_POST['crear_seguimiento'])) {
   </div>
 
   <div class="mb-3">
-  <a href="http://localhost/Usuarios/index_rescatista.php" class="btn btn-secondary">← Regresar a panel principal</a>
+  <a href="http://192.168.100.3/Usuarios/index_rescatista.php" class="btn btn-secondary">← Regresar a panel principal</a>
 </div>
 
   <!-- Modal Crear Seguimiento -->
@@ -154,7 +154,7 @@ if (isset($_GET['creado'])) {
 
 // Consultar seguimientos con posible filtro
 $filtro_id_animal = $_GET['filtro_id_animal'] ?? null;
-$url_api = 'http://localhost:3004/seguimiento';
+$url_api = 'http://192.168.100.3:3004/seguimiento';
 
 if ($filtro_id_animal !== null && $filtro_id_animal !== '') {
     $url_api .= '/animal/' . intval($filtro_id_animal);
